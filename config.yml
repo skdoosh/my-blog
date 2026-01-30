@@ -28,6 +28,8 @@ params:
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
   ShowWordCount: true
+  showToc: true
+  tocOpen: false
 
   homeInfoParams:
     Title: "Welcome to my Blog!"

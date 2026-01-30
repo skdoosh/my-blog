@@ -6,17 +6,14 @@
     <description>Recent content on skdoosh</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 31 Jan 2026 00:59:03 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My First Post</title>
-      <link>http://localhost:1313/posts/my-first-post/</link>
-      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/my-first-post/</guid>
-      <description>&lt;p&gt;This is my first blog post!&lt;/p&gt;
-&lt;p&gt;And I changed this while the server -D command was running!&lt;/p&gt;
-&lt;h2 id=&#34;welcome&#34;&gt;Welcome&lt;/h2&gt;
-&lt;p&gt;Here&amp;rsquo;s some content&amp;hellip;&lt;/p&gt;</description>
+      <title>Blog Update 1</title>
+      <link>http://localhost:1313/posts/blog-update-1/</link>
+      <pubDate>Sat, 31 Jan 2026 00:59:03 +0530</pubDate>
+      <guid>http://localhost:1313/posts/blog-update-1/</guid>
+      <description>The first post of this blog; entails how I made this blog and my intentions for it.</description>
     </item>
     <item>
       <title>About</title>
