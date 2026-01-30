@@ -1,4 +1,4 @@
-baseURL: "https://skdoosh.github.io/"
+baseURL: "https://skdoosh-blog.netlify.app/"
 title: "skdoosh"
 theme: "PaperMod"
 languageCode: "en-us"
