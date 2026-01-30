@@ -1,0 +1,55 @@
+baseURL: "https://skdoosh.github.io/"
+title: "skdoosh"
+theme: "PaperMod"
+languageCode: "en-us"
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+minify:
+  disableXML: true
+  minifyOutput: true
+
+params:
+  env: production
+  title: "skdoosh"
+  description: "building in public"
+  author: "Shreyas D"
+
+  # Theme settings
+  defaultTheme: auto # auto, light, dark
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+
+  homeInfoParams:
+    Title: "Welcome to my Blog!"
+    Content: "Building in public"
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/skdoosh"
+    - name: twitter
+      url: "https://twitter.com/skdooshdev"
+
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 30

@@ -1,0 +1,127 @@
+/* 
+ * Custom Theme for PaperMod
+ * Dark mode inspired by developer sites like spidermonkey.dev
+ * Light mode with inverted colors
+ * 
+ * Place this file at: assets/css/extended/custom.css
+ */
+
+/* Import custom font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   LIGHT MODE COLORS
+   ============================================ */
+:root {
+  /* Main background */
+  --theme: #110b2b;
+
+  /* Card/Entry background */
+  --entry: #f5f5f5;
+
+  /* Primary text color */
+  --primary: #1a1a1a;
+
+  /* Secondary/muted text */
+  --secondary: #666666;
+
+  /* Link/accent color */
+  --tertiary: #ff6b35;
+
+  /* Borders */
+  --border: #e8e8e8;
+
+  /* Code block background */
+  --code-bg: #f0f0f0;
+
+  /* Hover background */
+  --hljs-bg: #fafafa;
+}
+
+/* ============================================
+   DARK MODE COLORS
+   ============================================ */
+.dark {
+  /* Main background - deep blue-gray like GitHub */
+  --theme: #110b2b;
+
+  /* Card/Entry background - slightly lighter */
+  --entry: #161b22;
+
+  /* Primary text color - light blue-gray */
+  --primary: #e6edf3;
+
+  /* Secondary/muted text */
+  --secondary: #8b949e;
+
+  /* Link/accent color - warm orange */
+  --tertiary: #ff8c5a;
+
+  /* Borders */
+  --border: #30363d;
+
+  /* Code block background */
+  --code-bg: #1c2128;
+
+  /* Hover background */
+  --hljs-bg: #21262d;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+
+/* Apply custom font */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Smooth transitions when switching themes */
+body,
+.main,
+.post-entry,
+.post-single {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Improve line height for readability */
+.post-content p,
+.post-content li,
+article p,
+article li {
+  line-height: 1.7;
+}
+
+/* Better heading styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+}
+
+/* Subtle shadow for cards in light mode */
+:root .post-entry {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dark .post-entry {
+  box-shadow: none;
+}
+
+/* Rounded corners for code blocks */
+pre,
+code {
+  border-radius: 6px;
+}
+
+/* Link hover effect */
+a {
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
