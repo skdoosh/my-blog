@@ -6,8 +6,384 @@
     <description>Recent content on skdoosh</description>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 31 Jan 2026 00:59:03 +0530</lastBuildDate>
+    <lastBuildDate>Sat, 31 Jan 2026 04:51:18 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Document Scanner Demo</title>
+      <link>http://localhost:1313/posts/doc-scanner/</link>
+      <pubDate>Sat, 31 Jan 2026 04:51:18 +0530</pubDate>
+      <guid>http://localhost:1313/posts/doc-scanner/</guid>
+      <description>&lt;h1 id=&#34;document-scanner-demo&#34;&gt;Document Scanner Demo&lt;/h1&gt;
+&lt;p&gt;Upload an image of a document and watch it get automatically scanned and enhanced!&lt;/p&gt;
+
+
+&lt;div class=&#34;document-scanner-widget&#34; id=&#34;doc-scanner-0&#34;&gt;
+    &lt;style&gt;
+        .document-scanner-widget {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .scanner-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #4299e1;
+            background: #f7fafc;
+        }
+        
+        .upload-area.dragover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #718096;
+        }
+        
+        .upload-text {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-hint {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .preview-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .preview-box {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #2d3748;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .scan-button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .scan-button:hover:not(:disabled) {
+            background: #3182ce;
+        }
+        
+        .scan-button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .download-button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .download-button:hover {
+            background: #38a169;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #4299e1;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        
+        .spinner {
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #4299e1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border-left: 4px solid #c53030;
+        }
+        
+        .reset-button {
+            background: #718096;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .reset-button:hover {
+            background: #4a5568;
+        }
+    &lt;/style&gt;
+    
+    &lt;div class=&#34;scanner-container&#34;&gt;
+        &lt;div class=&#34;upload-area&#34; id=&#34;upload-area-0&#34;&gt;
+            &lt;div class=&#34;upload-icon&#34;&gt;📄&lt;/div&gt;
+            &lt;div class=&#34;upload-text&#34;&gt;Click to upload or drag and drop&lt;/div&gt;
+            &lt;div class=&#34;upload-hint&#34;&gt;Supports JPG, PNG (Max 10MB)&lt;/div&gt;
+            &lt;input type=&#34;file&#34; class=&#34;file-input&#34; id=&#34;file-input-0&#34; accept=&#34;image/*&#34;&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&#34;preview-container&#34; id=&#34;preview-container-0&#34;&gt;
+            &lt;div class=&#34;preview-box&#34;&gt;
+                &lt;div class=&#34;preview-title&#34;&gt;Original&lt;/div&gt;
+                &lt;img class=&#34;preview-image&#34; id=&#34;original-preview-0&#34; alt=&#34;Original image&#34;&gt;
+            &lt;/div&gt;
+            &lt;div class=&#34;preview-box&#34;&gt;
+                &lt;div class=&#34;preview-title&#34;&gt;Scanned&lt;/div&gt;
+                &lt;img class=&#34;preview-image&#34; id=&#34;scanned-preview-0&#34; alt=&#34;Scanned image&#34;&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;button class=&#34;scan-button&#34; id=&#34;scan-button-0&#34; disabled&gt;Scan Document&lt;/button&gt;
+        &lt;button class=&#34;download-button&#34; id=&#34;download-button-0&#34;&gt;Download Scanned Image&lt;/button&gt;
+        
+        &lt;div class=&#34;loading&#34; id=&#34;loading-0&#34;&gt;
+            &lt;div class=&#34;spinner&#34;&gt;&lt;/div&gt;
+            &lt;div&gt;Processing your document...&lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&#34;error-message&#34; id=&#34;error-message-0&#34;&gt;&lt;/div&gt;
+        
+        &lt;button class=&#34;reset-button&#34; id=&#34;reset-button-0&#34; style=&#34;display: none;&#34;&gt;Upload Another Document&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+(function() {
+    const id = &#39;0&#39;;
+    const API_URL = &#39;https:\/\/doc-scanner-backend-production.up.railway.app&#39;;
+    
+    const uploadArea = document.getElementById(`upload-area-${id}`);
+    const fileInput = document.getElementById(`file-input-${id}`);
+    const previewContainer = document.getElementById(`preview-container-${id}`);
+    const originalPreview = document.getElementById(`original-preview-${id}`);
+    const scannedPreview = document.getElementById(`scanned-preview-${id}`);
+    const scanButton = document.getElementById(`scan-button-${id}`);
+    const downloadButton = document.getElementById(`download-button-${id}`);
+    const loading = document.getElementById(`loading-${id}`);
+    const errorMessage = document.getElementById(`error-message-${id}`);
+    const resetButton = document.getElementById(`reset-button-${id}`);
+    
+    let selectedFile = null;
+    let scannedBlob = null;
+    
+    
+    uploadArea.addEventListener(&#39;click&#39;, () =&gt; fileInput.click());
+    
+    
+    fileInput.addEventListener(&#39;change&#39;, (e) =&gt; {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    });
+    
+    
+    uploadArea.addEventListener(&#39;dragover&#39;, (e) =&gt; {
+        e.preventDefault();
+        uploadArea.classList.add(&#39;dragover&#39;);
+    });
+    
+    uploadArea.addEventListener(&#39;dragleave&#39;, () =&gt; {
+        uploadArea.classList.remove(&#39;dragover&#39;);
+    });
+    
+    uploadArea.addEventListener(&#39;drop&#39;, (e) =&gt; {
+        e.preventDefault();
+        uploadArea.classList.remove(&#39;dragover&#39;);
+        const file = e.dataTransfer.files[0];
+        if (file) handleFile(file);
+    });
+    
+    function handleFile(file) {
+        if (!file.type.match(&#39;image.*&#39;)) {
+            showError(&#39;Please upload an image file&#39;);
+            return;
+        }
+        
+        if (file.size &gt; 10 * 1024 * 1024) {
+            showError(&#39;File size must be less than 10MB&#39;);
+            return;
+        }
+        
+        selectedFile = file;
+        
+        
+        const reader = new FileReader();
+        reader.onload = (e) =&gt; {
+            originalPreview.src = e.target.result;
+            scannedPreview.src = &#39;&#39;;
+            previewContainer.style.display = &#39;grid&#39;;
+            scanButton.disabled = false;
+            uploadArea.style.display = &#39;none&#39;;
+            resetButton.style.display = &#39;inline-block&#39;;
+        };
+        reader.readAsDataURL(file);
+        
+        hideError();
+    }
+    
+    scanButton.addEventListener(&#39;click&#39;, async () =&gt; {
+        if (!selectedFile) return;
+        
+        const formData = new FormData();
+        formData.append(&#39;file&#39;, selectedFile);
+        
+        scanButton.disabled = true;
+        loading.style.display = &#39;block&#39;;
+        hideError();
+        
+        try {
+            const response = await fetch(`${API_URL}/scan`, {
+                method: &#39;POST&#39;,
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Scan failed: ${response.statusText}`);
+            }
+            
+            scannedBlob = await response.blob();
+            const url = URL.createObjectURL(scannedBlob);
+            scannedPreview.src = url;
+            downloadButton.style.display = &#39;block&#39;;
+            
+        } catch (error) {
+            console.error(&#39;Error:&#39;, error);
+            showError(&#39;Failed to scan document. Please try again.&#39;);
+            scanButton.disabled = false;
+        } finally {
+            loading.style.display = &#39;none&#39;;
+        }
+    });
+    
+    downloadButton.addEventListener(&#39;click&#39;, () =&gt; {
+        if (!scannedBlob) return;
+        
+        const url = URL.createObjectURL(scannedBlob);
+        const a = document.createElement(&#39;a&#39;);
+        a.href = url;
+        a.download = `scanned-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+    
+    resetButton.addEventListener(&#39;click&#39;, () =&gt; {
+        selectedFile = null;
+        scannedBlob = null;
+        fileInput.value = &#39;&#39;;
+        originalPreview.src = &#39;&#39;;
+        scannedPreview.src = &#39;&#39;;
+        previewContainer.style.display = &#39;none&#39;;
+        uploadArea.style.display = &#39;block&#39;;
+        scanButton.disabled = true;
+        downloadButton.style.display = &#39;none&#39;;
+        resetButton.style.display = &#39;none&#39;;
+        hideError();
+    });
+    
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = &#39;block&#39;;
+    }
+    
+    function hideError() {
+        errorMessage.style.display = &#39;none&#39;;
+    }
+})();
+&lt;/script&gt;
+
+&lt;h2 id=&#34;how-it-works&#34;&gt;How It Works&lt;/h2&gt;
+&lt;p&gt;This scanner uses computer vision to:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Blog Update 1</title>
       <link>http://localhost:1313/posts/blog-update-1/</link>
