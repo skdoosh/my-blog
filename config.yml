@@ -38,6 +38,7 @@ params:
       url: "https://github.com/skdoosh"
     - name: twitter
       url: "https://twitter.com/skdooshdev"
+  hideFooter: true
 
 menu:
   main:
