@@ -60,6 +60,30 @@ Save this file as: layouts/shortcodes/document-scanner.html
         .file-input {
             display: none;
         }
+
+        .upload-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .source-button {
+            border: 1px solid var(--tertiary);
+            background: var(--tertiary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .source-button.secondary {
+            background: transparent;
+            color: var(--tertiary);
+        }
         
         .preview-container {
             display: none;
@@ -228,9 +252,14 @@ Save this file as: layouts/shortcodes/document-scanner.html
     <div class="scanner-container">
         <div class="upload-area" id="upload-area-{{ .Ordinal }}">
             <div class="upload-icon">📄</div>
-            <div class="upload-text">Click to upload or drag and drop</div>
+            <div class="upload-text">Upload a file or take a photo</div>
             <div class="upload-hint">Supports JPG, PNG (Max 10MB)</div>
+            <div class="upload-actions">
+                <button type="button" class="source-button" id="pick-button-{{ .Ordinal }}">Choose Image</button>
+                <button type="button" class="source-button secondary" id="camera-button-{{ .Ordinal }}">Take Photo</button>
+            </div>
             <input type="file" class="file-input" id="file-input-{{ .Ordinal }}" accept="image/*">
+            <input type="file" class="file-input" id="camera-input-{{ .Ordinal }}" accept="image/*" capture="environment">
         </div>
         
         <div class="preview-container" id="preview-container-{{ .Ordinal }}">
@@ -261,10 +290,13 @@ Save this file as: layouts/shortcodes/document-scanner.html
 <script>
 (function() {
     const id = '{{ .Ordinal }}';
-    const API_URL = '{{ .Get "api_url" | default "https://your-api-url.com" }}';
+    const API_URL = '{{ .Get "api_url" | default site.Params.docScannerApiURL | default "https://your-doc-scanner-api.onrender.com" }}';
     
     const uploadArea = document.getElementById(`upload-area-${id}`);
+    const pickButton = document.getElementById(`pick-button-${id}`);
+    const cameraButton = document.getElementById(`camera-button-${id}`);
     const fileInput = document.getElementById(`file-input-${id}`);
+    const cameraInput = document.getElementById(`camera-input-${id}`);
     const previewContainer = document.getElementById(`preview-container-${id}`);
     const originalPreview = document.getElementById(`original-preview-${id}`);
     const scannedPreview = document.getElementById(`scanned-preview-${id}`);
@@ -278,10 +310,30 @@ Save this file as: layouts/shortcodes/document-scanner.html
     let scannedBlob = null;
     
     // Click to upload
-    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', () => {
+        fileInput.value = '';
+        fileInput.click();
+    });
+
+    pickButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.value = '';
+        fileInput.click();
+    });
+
+    cameraButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        cameraInput.value = '';
+        cameraInput.click();
+    });
     
     // File selection
     fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) handleFile(file);
+    });
+
+    cameraInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) handleFile(file);
     });
@@ -382,6 +434,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
         selectedFile = null;
         scannedBlob = null;
         fileInput.value = '';
+        cameraInput.value = '';
         originalPreview.src = '';
         scannedPreview.src = '';
         previewContainer.style.display = 'none';

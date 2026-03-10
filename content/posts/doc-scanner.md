@@ -7,9 +7,9 @@ description: ""
 ---
 # Document Scanner Demo
 
-Upload an image of a document and watch it get automatically scanned and enhanced!
+Upload an image of a document (or take a photo directly from your phone camera) and watch it get automatically scanned and enhanced!
 
-{{< document-scanner api_url="https://doc-scanner-backend-production.up.railway.app" >}}
+{{< document-scanner >}}
 
 ## How It Works
 
