@@ -58,7 +58,11 @@ Save this file as: layouts/shortcodes/document-scanner.html
         }
         
         .file-input {
-            display: none;
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
         }
 
         .upload-actions {
@@ -78,6 +82,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
             font-weight: 600;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
+            display: inline-block;
         }
 
         .source-button.secondary {
@@ -255,8 +260,8 @@ Save this file as: layouts/shortcodes/document-scanner.html
             <div class="upload-text">Upload a file or take a photo</div>
             <div class="upload-hint">Supports JPG, PNG (Max 10MB)</div>
             <div class="upload-actions">
-                <button type="button" class="source-button" id="pick-button-{{ .Ordinal }}">Choose Image</button>
-                <button type="button" class="source-button secondary" id="camera-button-{{ .Ordinal }}">Take Photo</button>
+                <label class="source-button" for="file-input-{{ .Ordinal }}">Choose Image</label>
+                <label class="source-button secondary" for="camera-input-{{ .Ordinal }}">Take Photo</label>
             </div>
             <input type="file" class="file-input" id="file-input-{{ .Ordinal }}" accept="image/*">
             <input type="file" class="file-input" id="camera-input-{{ .Ordinal }}" accept="image/*" capture="environment">
@@ -293,8 +298,6 @@ Save this file as: layouts/shortcodes/document-scanner.html
     const API_URL = '{{ .Get "api_url" | default site.Params.docScannerApiURL | default "https://your-doc-scanner-api.onrender.com" }}';
     
     const uploadArea = document.getElementById(`upload-area-${id}`);
-    const pickButton = document.getElementById(`pick-button-${id}`);
-    const cameraButton = document.getElementById(`camera-button-${id}`);
     const fileInput = document.getElementById(`file-input-${id}`);
     const cameraInput = document.getElementById(`camera-input-${id}`);
     const previewContainer = document.getElementById(`preview-container-${id}`);
@@ -308,24 +311,6 @@ Save this file as: layouts/shortcodes/document-scanner.html
     
     let selectedFile = null;
     let scannedBlob = null;
-    
-    // Click to upload
-    uploadArea.addEventListener('click', () => {
-        fileInput.value = '';
-        fileInput.click();
-    });
-
-    pickButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        fileInput.value = '';
-        fileInput.click();
-    });
-
-    cameraButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        cameraInput.value = '';
-        cameraInput.click();
-    });
     
     // File selection
     fileInput.addEventListener('change', (e) => {
@@ -400,7 +385,14 @@ Save this file as: layouts/shortcodes/document-scanner.html
             });
             
             if (!response.ok) {
-                throw new Error(`Scan failed: ${response.statusText}`);
+                let message = `Scan failed (${response.status})`;
+                try {
+                    const errBody = await response.json();
+                    if (errBody && errBody.detail) {
+                        message = errBody.detail;
+                    }
+                } catch (_) {}
+                throw new Error(message);
             }
             
             scannedBlob = await response.blob();
@@ -410,7 +402,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
             
         } catch (error) {
             console.error('Error:', error);
-            showError('Failed to scan document. Please try again.');
+            showError(error.message || 'Failed to scan document. Please try again.');
             scanButton.disabled = false;
         } finally {
             loading.style.display = 'none';
