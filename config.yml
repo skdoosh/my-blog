@@ -41,6 +41,7 @@ params:
     - name: twitter
       url: "https://twitter.com/skdooshdev"
   hideFooter: true
+  mdchartApiURL: "https://mdchart.onrender.com"
 
 menu:
   main:

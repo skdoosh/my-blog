@@ -235,3 +235,115 @@ button:focus-visible {
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* ============================================
+   mdchart Playground Shortcode
+   ============================================ */
+.mdchart-widget {
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.mdchart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.mdchart-subtitle {
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+.mdchart-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--secondary);
+}
+
+.mdchart-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 160px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--primary);
+  padding: 0.75rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9rem;
+}
+
+.mdchart-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.mdchart-button {
+  border: 1px solid var(--tertiary);
+  background: var(--tertiary);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mdchart-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mdchart-button.mdchart-secondary {
+  background: transparent;
+  color: var(--tertiary);
+}
+
+.mdchart-status {
+  margin-top: 0.75rem;
+  min-height: 1.3rem;
+  font-size: 0.9rem;
+}
+
+.mdchart-status.success {
+  color: #1b8f4d;
+}
+
+.mdchart-status.error {
+  color: #cb3a3a;
+}
+
+.mdchart-status.loading {
+  color: var(--secondary);
+}
+
+.mdchart-output {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.mdchart-image {
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.mdchart-markdown {
+  margin: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--code-bg);
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 0.82rem;
+}
