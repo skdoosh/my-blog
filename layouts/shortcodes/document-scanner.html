@@ -311,6 +311,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
     
     let selectedFile = null;
     let scannedBlob = null;
+    let scannedMime = 'image/jpeg';
     
     // File selection
     fileInput.addEventListener('change', (e) => {
@@ -340,18 +341,29 @@ Save this file as: layouts/shortcodes/document-scanner.html
         if (file) handleFile(file);
     });
     
-    function handleFile(file) {
+    async function handleFile(file) {
         if (!file.type.match('image.*')) {
             showError('Please upload an image file');
             return;
         }
         
-        if (file.size > 10 * 1024 * 1024) {
-            showError('File size must be less than 10MB');
+        if (file.size > 25 * 1024 * 1024) {
+            showError('File is too large. Please use an image below 25MB.');
             return;
         }
-        
-        selectedFile = file;
+
+        loading.style.display = 'block';
+        hideError();
+
+        try {
+            selectedFile = await optimizeImageForUpload(file);
+        } catch (error) {
+            showError(error.message || 'Failed to process image.');
+            loading.style.display = 'none';
+            return;
+        } finally {
+            loading.style.display = 'none';
+        }
         
         // Show preview
         const reader = new FileReader();
@@ -363,7 +375,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
             uploadArea.style.display = 'none';
             resetButton.style.display = 'inline-block';
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(selectedFile);
         
         hideError();
     }
@@ -379,7 +391,12 @@ Save this file as: layouts/shortcodes/document-scanner.html
         hideError();
         
         try {
-            const response = await fetch(`${API_URL}/scan`, {
+            const scanUrl = new URL(`${API_URL}/scan`);
+            scanUrl.searchParams.set('max_dimension', '1600');
+            scanUrl.searchParams.set('output', 'jpeg');
+            scanUrl.searchParams.set('enhance', 'false');
+
+            const response = await fetch(scanUrl.toString(), {
                 method: 'POST',
                 body: formData
             });
@@ -396,6 +413,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
             }
             
             scannedBlob = await response.blob();
+            scannedMime = response.headers.get('content-type') || 'image/jpeg';
             const url = URL.createObjectURL(scannedBlob);
             scannedPreview.src = url;
             downloadButton.style.display = 'block';
@@ -415,7 +433,8 @@ Save this file as: layouts/shortcodes/document-scanner.html
         const url = URL.createObjectURL(scannedBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `scanned-${Date.now()}.png`;
+        const ext = scannedMime.includes('png') ? 'png' : 'jpg';
+        a.download = `scanned-${Date.now()}.${ext}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -425,6 +444,7 @@ Save this file as: layouts/shortcodes/document-scanner.html
     resetButton.addEventListener('click', () => {
         selectedFile = null;
         scannedBlob = null;
+        scannedMime = 'image/jpeg';
         fileInput.value = '';
         cameraInput.value = '';
         originalPreview.src = '';
@@ -444,6 +464,64 @@ Save this file as: layouts/shortcodes/document-scanner.html
     
     function hideError() {
         errorMessage.style.display = 'none';
+    }
+
+    async function optimizeImageForUpload(file) {
+        const image = await loadImageFromFile(file);
+        const maxDimension = 1600;
+        const width = image.width;
+        const height = image.height;
+        const scale = Math.min(1, maxDimension / Math.max(width, height));
+
+        if (scale === 1 && file.size <= 2 * 1024 * 1024) {
+            return file;
+        }
+
+        const targetWidth = Math.max(1, Math.round(width * scale));
+        const targetHeight = Math.max(1, Math.round(height * scale));
+
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) {
+            throw new Error('Image processing is not supported in this browser.');
+        }
+        ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+        const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob(
+                (b) => (b ? resolve(b) : reject(new Error('Failed to compress image.'))),
+                'image/jpeg',
+                0.88
+            );
+        });
+
+        const baseName = (file.name || `capture-${Date.now()}`).replace(/\.[^.]+$/, '');
+        return new File([blob], `${baseName}.jpg`, { type: 'image/jpeg' });
+    }
+
+    async function loadImageFromFile(file) {
+        if ('createImageBitmap' in window) {
+            try {
+                return await createImageBitmap(file);
+            } catch (_) {}
+        }
+
+        return await new Promise((resolve, reject) => {
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+            img.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+                resolve(img);
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error('Could not load image file.'));
+            };
+            img.src = objectUrl;
+        });
     }
 })();
 </script>
