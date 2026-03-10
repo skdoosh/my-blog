@@ -1,6 +1,6 @@
 ---
 title: "mdchart: Markdown Charts, End-to-End"
-date: 2026-03-10T07:35:00+05:30
+date: 2026-03-09T12:00:00+05:30
 draft: false
 tags: ["hugo", "mdchart", "charts", "fastapi", "matplotlib"]
 description: "A showcase of mdchart: DSL parser, chart rendering engine, API deployment, and live Hugo playground"
