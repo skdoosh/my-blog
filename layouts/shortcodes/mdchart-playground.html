@@ -19,7 +19,6 @@
 
   <div class="mdchart-output" id="mdchart-output-{{ .Ordinal }}" hidden>
     <img id="mdchart-image-{{ .Ordinal }}" class="mdchart-image" alt="Generated chart preview" />
-    <pre id="mdchart-markdown-{{ .Ordinal }}" class="mdchart-markdown"></pre>
   </div>
 </div>
 
@@ -36,7 +35,6 @@
   const statusEl = document.getElementById(`mdchart-status-${id}`);
   const output = document.getElementById(`mdchart-output-${id}`);
   const image = document.getElementById(`mdchart-image-${id}`);
-  const markdownEl = document.getElementById(`mdchart-markdown-${id}`);
 
   let lastMarkdown = "";
 
@@ -76,7 +74,6 @@
       const dataUrl = `data:image/png;base64,${base64}`;
       image.src = dataUrl;
       lastMarkdown = `![Generated Chart](${dataUrl} "Generated Chart")`;
-      markdownEl.textContent = lastMarkdown;
       output.hidden = false;
       setStatus("Rendered successfully.", "success");
     } catch (error) {
@@ -95,7 +92,7 @@
       await navigator.clipboard.writeText(lastMarkdown);
       setStatus("Markdown copied to clipboard.", "success");
     } catch (error) {
-      setStatus("Clipboard copy failed. Copy manually from the output block.", "error");
+      setStatus("Clipboard copy failed.", "error");
     }
   }
 
