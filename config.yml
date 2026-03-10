@@ -42,7 +42,7 @@ params:
       url: "https://twitter.com/skdooshdev"
   hideFooter: true
   mdchartApiURL: "https://mdchart.onrender.com"
-  docScannerApiURL: "https://doc-scanner-backend.onrender.com"
+  docScannerApiURL: "https://doc-scanner-backend-iw84.onrender.com"
 
 menu:
   main:
