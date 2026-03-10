@@ -1,0 +1,105 @@
+{{- $apiURL := .Get "api_url" | default site.Params.mdchartApiURL | default "https://mdchart.onrender.com" -}}
+{{- $defaultDSL := .Inner | default "type = bar;\nx = month;\ny = sales;\ndata = [Jan:100, Feb:120, Mar:90];" -}}
+
+<div class="mdchart-widget" id="mdchart-widget-{{ .Ordinal }}" data-api-url="{{ $apiURL }}">
+  <div class="mdchart-header">
+    <strong>mdchart Playground</strong>
+    <span class="mdchart-subtitle">Render chart DSL with your hosted FastAPI backend</span>
+  </div>
+
+  <label class="mdchart-label" for="mdchart-input-{{ .Ordinal }}">Chart DSL</label>
+  <textarea id="mdchart-input-{{ .Ordinal }}" class="mdchart-textarea" rows="8">{{ $defaultDSL }}</textarea>
+
+  <div class="mdchart-actions">
+    <button type="button" class="mdchart-button" id="mdchart-render-{{ .Ordinal }}">Render Chart</button>
+    <button type="button" class="mdchart-button mdchart-secondary" id="mdchart-copy-{{ .Ordinal }}">Copy Markdown</button>
+  </div>
+
+  <div class="mdchart-status" id="mdchart-status-{{ .Ordinal }}"></div>
+
+  <div class="mdchart-output" id="mdchart-output-{{ .Ordinal }}" hidden>
+    <img id="mdchart-image-{{ .Ordinal }}" class="mdchart-image" alt="Generated chart preview" />
+    <pre id="mdchart-markdown-{{ .Ordinal }}" class="mdchart-markdown"></pre>
+  </div>
+</div>
+
+<script>
+(function () {
+  const id = "{{ .Ordinal }}";
+  const root = document.getElementById(`mdchart-widget-${id}`);
+  if (!root) return;
+
+  const apiBase = root.dataset.apiUrl.replace(/\/+$/, "");
+  const input = document.getElementById(`mdchart-input-${id}`);
+  const renderBtn = document.getElementById(`mdchart-render-${id}`);
+  const copyBtn = document.getElementById(`mdchart-copy-${id}`);
+  const statusEl = document.getElementById(`mdchart-status-${id}`);
+  const output = document.getElementById(`mdchart-output-${id}`);
+  const image = document.getElementById(`mdchart-image-${id}`);
+  const markdownEl = document.getElementById(`mdchart-markdown-${id}`);
+
+  let lastMarkdown = "";
+
+  function setStatus(message, type) {
+    statusEl.textContent = message || "";
+    statusEl.className = `mdchart-status ${type || ""}`.trim();
+  }
+
+  async function renderChart() {
+    const dsl = input.value.trim();
+    if (!dsl) {
+      setStatus("DSL is empty.", "error");
+      return;
+    }
+
+    setStatus("Rendering chart...", "loading");
+    renderBtn.disabled = true;
+    output.hidden = true;
+
+    try {
+      const response = await fetch(`${apiBase}/v1/render-dsl`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dsl }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload.detail || `Request failed (${response.status})`);
+      }
+
+      const base64 = payload?.chart?.png_base64;
+      if (!base64) {
+        throw new Error("No chart image was returned by the API.");
+      }
+
+      const dataUrl = `data:image/png;base64,${base64}`;
+      image.src = dataUrl;
+      lastMarkdown = `![Generated Chart](${dataUrl} "Generated Chart")`;
+      markdownEl.textContent = lastMarkdown;
+      output.hidden = false;
+      setStatus("Rendered successfully.", "success");
+    } catch (error) {
+      setStatus(error.message || "Render failed.", "error");
+    } finally {
+      renderBtn.disabled = false;
+    }
+  }
+
+  async function copyMarkdown() {
+    if (!lastMarkdown) {
+      setStatus("Render a chart before copying markdown.", "error");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(lastMarkdown);
+      setStatus("Markdown copied to clipboard.", "success");
+    } catch (error) {
+      setStatus("Clipboard copy failed. Copy manually from the output block.", "error");
+    }
+  }
+
+  renderBtn.addEventListener("click", renderChart);
+  copyBtn.addEventListener("click", copyMarkdown);
+})();
+</script>
